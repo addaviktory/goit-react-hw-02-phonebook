@@ -5,6 +5,7 @@ export class Contacts extends Component {
   state = {
     name: '',
     number: '',
+    contacts: [],
   };
 
   handleInputChange = e => {
@@ -14,8 +15,16 @@ export class Contacts extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    const { name, number, contacts } = this.state;
+    if (contacts.find(contact => contact.name === name || contact.number === number)) {
+      alert('Contact already exists!');
+    } else {
+      this.setState(prevState => ({
+        contacts: [...prevState.contacts, { name, number }],
+      }));
+      this.props.onSubmit(this.state);
+      this.reset();
+    }
   };
 
   reset = () => {
@@ -38,7 +47,7 @@ export class Contacts extends Component {
             value={this.state.name}
           />
         </Label>
-        
+
         <Label>
           Number:
           <Input
